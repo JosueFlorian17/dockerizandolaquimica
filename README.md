@@ -66,10 +66,13 @@ cd /workspace
 Puedes aportar ideas, ejemplos, mejoras o abrir issues en el repositorio:
 
 👉 github.com/tuusuario/dockerizandolaquimica
-📢 Créditos y contacto
+
+## 📢 Créditos y contacto
 
 Creado por [usuario]
+
 💌 Contacto: [usuario]
+
 🐙 GitHub: @usuario
 
 
