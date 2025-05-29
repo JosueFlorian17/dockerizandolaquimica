@@ -1,4 +1,4 @@
-# 🧪 Dockerizándola Química
+# 🧪 Dockerizando la Química
 
 Una imagen Docker lista para usar que contiene herramientas de química computacional modernas como **GROMACS**, **AutoDock Vina** y **MDAnalysis**, pensada para facilitar el trabajo de simulaciones moleculares sin complicaciones de instalación.
 
@@ -42,15 +42,6 @@ Este generador te permite:
 - Añadir herramientas opcionales
 
 - Descargar un Dockerfile personalizado
-
-## 📂 Volúmenes y archivos de entrada
-
-### Puedes montar tu carpeta local para trabajar con tus archivos:
-
-```
-docker run -it -v $(pwd):/workspace TUUSUARIO/dockerizandolaquimica bash
-cd /workspace
-```
 
 ## 🛠 Roadmap
 
