@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Generador Dockerfile</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container active">
+    <h2>Generador de Dockerfile Personalizado</h2>
+
+    <label for="gromacs">GROMACS:</label>
+    <select id="gromacs">
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+      <option value="2020.4">2020.4</option>
+    </select>
+
+    <label for="vina">AutoDock Vina:</label>
+    <select id="vina">
+      <option value="1.2.3">1.2.3</option>
+      <option value="1.2.0">1.2.0</option>
+      <option value="1.1.2">1.1.2</option>
+    </select>
+
+    <label for="mdanalysis">MDAnalysis:</label>
+    <select id="mdanalysis">
+      <option value="2.5.0">2.5.0</option>
+      <option value="2.4.3">2.4.3</option>
+      <option value="2.3.0">2.3.0</option>
+    </select>
+
+    <div class="btn-group">
+      <button onclick="generateDockerfile()">Generar Dockerfile</button>
+      <button class="copy-btn" onclick="copyToClipboard()">Copiar</button>
+    </div>
+
+    <pre id="dockerfile"></pre>
+  </div>
+  <script src="scripts.js"></script>
+</body>
+</html>

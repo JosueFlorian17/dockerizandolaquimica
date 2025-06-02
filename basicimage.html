@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instrucciones Docker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container active">
+    <h1>Usar la Imagen Docker</h1>
+    <p style="text-align:center;">Aquí te mostramos cómo usar la imagen desde Docker Hub</p>
+
+    <h2>📥 Descargar la Imagen (Docker Pull)</h2>
+    <p>Para descargar la imagen desde Docker Hub:</p>
+    <pre>docker pull osheny/dockerizandolaquimica:1.0</pre>
+
+    <h2>🚀 Ejecutar la Imagen (Docker Run)</h2>
+    <p>Para ejecutar un contenedor desde la imagen descargada:</p>
+    <pre>docker run -it osheny/dockerizandolaquimica:1.0</pre>
+
+    <h2>📂 Ejecutar con Montaje de Volumen</h2>
+    <p>Si quieres acceder a tus archivos locales dentro del contenedor:</p>
+    <pre>docker run -it -v /ruta/local:/ruta/en/contenedor osheny/dockerizandolaimagen:1.0</pre>
+
+    <div class="btn-group">
+      <button onclick="copyInstructions()">Copiar todo</button>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script>
+    function copyInstructions() {
+      const text = `
+docker pull osheny/dockerizandolaquimica:1.0
+
+docker run -it osheny/dockerizandolaquimica:1.0
+
+docker run -it -v /ruta/local:/ruta/en/contenedor osheny/dockerizandolaquimica:1.0
+      `.trim();
+      navigator.clipboard.writeText(text).then(() => {
+        alert("¡Comandos copiados al portapapeles!");
+      });
+    }
+  </script>
+</body>
+</html>
