@@ -144,50 +144,115 @@
     }
 
     function generateDockerfile() {
-      const gromacsVersion = document.getElementById('gromacs').value;
-      const vinaVersion = document.getElementById('vina').value;
-      const mdaVersion = document.getElementById('mdanalysis').value;
+  const gmx = document.getElementById('gromacs').value;
+  const vina = document.getElementById('vina').value;
+  const mda = document.getElementById('mdanalysis').value;
 
-      const dockerfile = `
+  // Python y GCC según versión de GROMACS
+  let pythonVer = '3.11';
+  let pythonBin = 'python3.11';
+  let pipBin = 'pip3.11';
+  let useDeadsnakes = true;
+  let needsGCC10 = false;
+
+  if (gmx === '2022') {
+    pythonVer = '3.10';
+    pythonBin = 'python3.10';
+    pipBin = 'pip3.10';
+    useDeadsnakes = false;
+  } else if (gmx === '2021' || gmx === '2020.4') {
+    needsGCC10 = true;
+  }
+
+  const numpyVersions = {
+    '2.3.0': '1.23.5',
+    '2.4.3': '1.24.4',
+    '2.5.0': '1.26.4'
+  };
+
+  const vinaUrls = {
+    '1.2.0': 'https://github.com/ccsb-scripps/AutoDock-Vina/releases/download/v1.2.0/vina_1.2.0_linux_x86_64',
+    '1.2.3': 'https://github.com/ccsb-scripps/AutoDock-Vina/releases/download/v1.2.3/vina_1.2.3_linux_x86_64'
+  };
+
+  const pythonInstall = useDeadsnakes
+    ? `
+# Instalar Python ${pythonVer} desde deadsnakes
+RUN add-apt-repository ppa:deadsnakes/ppa -y && \\
+    apt-get update && apt-get install -y \\
+    ${pythonBin} ${pythonBin}-distutils && \\
+    curl -sS https://bootstrap.pypa.io/get-pip.py | ${pythonBin}
+RUN ln -sf /usr/bin/${pythonBin} /usr/bin/python3 && \\
+    ln -sf /usr/local/bin/pip /usr/bin/pip`
+    : `
+# Instalar Python ${pythonVer} desde repositorios oficiales
+RUN apt-get update && apt-get install -y \\
+    ${pythonBin} ${pythonBin}-venv ${pythonBin}-dev && \\
+    curl -sS https://bootstrap.pypa.io/get-pip.py | ${pythonBin}
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/${pythonBin} 1`;
+
+  const gccInstall = needsGCC10
+    ? `
+# Instalar GCC-10 para GROMACS ${gmx}
+RUN apt-get update && apt-get install -y gcc-10 g++-10
+ENV CC=/usr/bin/gcc-10
+ENV CXX=/usr/bin/g++-10`
+    : '';
+
+  const gromacsBuild = `
+# Instalar GROMACS ${gmx}
+RUN wget ftp://ftp.gromacs.org/pub/gromacs/gromacs-${gmx}.tar.gz && \\
+    tar xfz gromacs-${gmx}.tar.gz && \\
+    cd gromacs-${gmx} && \\
+    mkdir build && cd build && \\
+    ${needsGCC10 ? 'CC=gcc-10 CXX=g++-10 ' : ''}cmake .. \\
+        -DGMX_BUILD_OWN_FFTW=ON \\
+        -DREGRESSIONTEST_DOWNLOAD=ON \\
+        -DCMAKE_INSTALL_PREFIX=/usr/local/gromacs && \\
+    make -j$(nproc) && make install && \\
+    echo 'source /usr/local/gromacs/bin/GMXRC' >> /etc/bash.bashrc && \\
+    cd ../.. && rm -rf gromacs-${gmx}*`;
+
+  const dockerfile = `
 FROM ubuntu:22.04
 
-# Instalar dependencias básicas
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instalar herramientas básicas
 RUN apt-get update && apt-get install -y \\
-    build-essential \\
-    cmake \\
-    wget \\
-    python3 \\
-    python3-pip \\
-    git
+    build-essential cmake wget git curl \\
+    software-properties-common \\
+    libboost-all-dev libeigen3-dev libfftw3-dev \\
+    libgsl-dev libhwloc-dev libxml2-dev \\
+    lsb-release gnupg ca-certificates${needsGCC10 ? ' gcc-10 g++-10' : ''} && \\
+    apt-get clean
 
-# Instalar GROMACS ${gromacsVersion}
-RUN wget -qO- https://ftp.gromacs.org/gromacs/gromacs-${gromacsVersion}.tar.gz | tar xz \\
-    && cd gromacs-${gromacsVersion} \\
-    && mkdir build && cd build \\
-    && cmake .. -DGMX_BUILD_OWN_FFTW=ON -DREGRESSIONTEST_DOWNLOAD=ON \\
-    && make -j$(nproc) \\
-    && make install
+${pythonInstall}
 
-# Instalar AutoDock Vina ${vinaVersion}
-RUN wget https://github.com/ccsb-scripps/AutoDock-Vina/releases/download/v${vinaVersion}/vina_${vinaVersion}_linux_x86_64.tar.gz \\
-    && tar -xzf vina_${vinaVersion}_linux_x86_64.tar.gz \\
-    && mv vina /usr/local/bin/
+${gccInstall}
 
-# Instalar MDAnalysis ${mdaVersion}
-RUN pip3 install MDAnalysis==${mdaVersion}
+${gromacsBuild}
+
+# Instalar AutoDock Vina ${vina}
+RUN wget ${vinaUrls[vina]} -O /usr/local/bin/vina && \\
+    chmod +x /usr/local/bin/vina
+
+# Instalar MDAnalysis ${mda}
+RUN pip install --upgrade pip setuptools wheel && \\
+    pip install "numpy==${numpyVersions[mda]}" "cython<3" && \\
+    pip install "MDAnalysis==${mda}"
+
+# Verificación
+RUN vina --help && \\
+    test -f /usr/local/gromacs/bin/gmx && \\
+    python3 -c "import MDAnalysis as mda; print('MDAnalysis:', mda.__version__)"
 
 CMD ["/bin/bash"]
 `;
 
-      document.getElementById('dockerfile').textContent = dockerfile.trim();
-    }
+  document.getElementById("dockerfile").textContent = dockerfile.trim();
+}
 
-    function copyToClipboard() {
-      const text = document.getElementById("dockerfile").textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("¡Dockerfile copiado al portapapeles!");
-      });
-    }
   </script>
 </body>
 </html>
