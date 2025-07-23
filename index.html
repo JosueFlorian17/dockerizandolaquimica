@@ -11,12 +11,10 @@
       padding: 2rem;
       color: #333;
     }
-
     h1, h2 {
       text-align: center;
       color: #2c3e50;
     }
-
     .container {
       max-width: 800px;
       margin: auto;
@@ -26,17 +24,14 @@
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
       display: none;
     }
-
     .container.active {
       display: block;
     }
-
     label {
       display: block;
       margin-top: 1rem;
       font-weight: bold;
     }
-
     select {
       width: 100%;
       padding: 0.5rem;
@@ -44,7 +39,6 @@
       border-radius: 5px;
       border: 1px solid #ccc;
     }
-
     button {
       margin-top: 2rem;
       padding: 0.75rem 1.5rem;
@@ -54,17 +48,14 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #1f6391;
     }
-
     .copy-btn {
       float: right;
       background-color: #27ae60;
       margin-left: 1rem;
     }
-
     pre {
       background: #272822;
       color: #f8f8f2;
@@ -73,7 +64,6 @@
       overflow-x: auto;
       margin-top: 2rem;
     }
-
     .btn-group {
       text-align: center;
     }
@@ -81,7 +71,7 @@
 </head>
 <body>
 
-  <!-- Pantalla 1: Bienvenida -->
+  <!-- Pantalla 1 -->
   <div id="pantalla1" class="container active">
     <h1>¡Bienvenido a Dockerizándola Química!</h1>
     <p style="text-align:center;">Esta herramienta te permite generar imágenes Docker personalizadas con software de simulación química.</p>
@@ -89,35 +79,34 @@
       <button onclick="cambiarPantalla(2)">Comenzar</button>
     </div>
   </div>
-  
-  <!-- Pantalla 2: Selección general -->
+
+  <!-- Pantalla 2 -->
   <div id="pantalla2" class="container">
     <h2>¿Qué deseas hacer?</h2>
     <p style="text-align:center;">Te ofrecemos una imagen base con GROMACS, AutoDock Vina y MDAnalysis.</p>
     <div class="btn-group">
-        <button style="background-color: #27ae60; font-weight: bold;">Descargar imagen</button>
-      </div>
+      <a href="tutorial.html"><button style="background-color: #27ae60; font-weight: bold;">Descargar imagen</button></a>
+    </div>
     <div class="btn-group">
       <button onclick="cambiarPantalla(3)">Elegir versiones específicas</button>
     </div>
   </div>
 
-  <!-- Pantalla 3: Generador Dockerfile -->
+  <!-- Pantalla 3 -->
   <div id="pantalla3" class="container">
     <h2>Generador de Dockerfile Personalizado</h2>
 
     <label for="gromacs">GROMACS:</label>
     <select id="gromacs">
-      <option value="2022">2022</option>
-      <option value="2021">2021</option>
       <option value="2020.4">2020.4</option>
+      <option value="2021">2021</option>
+      <option value="2022">2022</option>
     </select>
 
     <label for="vina">AutoDock Vina:</label>
     <select id="vina">
       <option value="1.2.3">1.2.3</option>
       <option value="1.2.0">1.2.0</option>
-      <option value="1.1.2">1.1.2</option>
     </select>
 
     <label for="mdanalysis">MDAnalysis:</label>
@@ -142,8 +131,9 @@
       }
       document.getElementById(`pantalla${n}`).classList.add('active');
     }
-
-    function generateDockerfile() {
+  </script>
+ <script>
+  function generateDockerfile() {
   const gmx = document.getElementById('gromacs').value;
   const vina = document.getElementById('vina').value;
   const mda = document.getElementById('mdanalysis').value;
@@ -253,6 +243,9 @@ CMD ["/bin/bash"]
   document.getElementById("dockerfile").textContent = dockerfile.trim();
 }
 
-  </script>
+
+</script>
+
+
 </body>
 </html>
