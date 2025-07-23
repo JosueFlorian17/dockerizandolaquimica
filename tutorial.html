@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1, h2 {
+      text-align:left;
+      color: #2c3e50;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .container.active {
+      display: block;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 2rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1f6391;
+    }
+
+    .copy-btn {
+      float: right;
+      background-color: #27ae60;
+      margin-left: 1rem;
+    }
+
+    pre {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 1rem;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin-top: 2rem;
+    }
+
+    .btn-group {
+      text-align: center;
+    }
+  </style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial: Usar Docker y hacer Docker Pull</title>
+</head>
+<body>
+    <h1>Tutorial: Cómo usar Docker y hacer <code>docker pull</code></h1>
+    <h2>¿Qué es Docker?</h2>
+    <p>
+        Docker es una plataforma que permite crear, desplegar y ejecutar aplicaciones en contenedores. Los contenedores son entornos ligeros y portables que incluyen todo lo necesario para ejecutar una aplicación.
+    </p>
+    <h2>Instalar Docker</h2>
+    <ol>
+        <li>Visita la página oficial de <a href="https://www.docker.com/products/docker-desktop/" target="_blank">Docker Desktop</a>.</li>
+        <li>Descarga la versión adecuada para tu sistema operativo (Windows, Mac o Linux).</li>
+        <li>Instala Docker siguiendo las instrucciones del instalador.</li>
+        <li>Verifica la instalación abriendo una terminal y ejecutando:<br>
+            <code>docker --version</code>
+        </li>
+    </ol>
+    <h2>Descargar una imagen con <code>docker pull</code></h2>
+    <p>
+        Para descargar la imagen <strong>osheny/dockerizandolaquimica2:latest</strong>, abre una terminal y ejecuta el siguiente comando:
+    </p>
+    <pre><code>docker pull osheny/dockerizandolaquimica2:latest</code></pre>
+    <p>
+        Docker buscará la imagen en el repositorio y la descargará a tu equipo.
+    </p>
+    <h2>Verificar la imagen descargada</h2>
+    <p>
+        Para ver las imágenes descargadas, ejecuta:
+    </p>
+    <pre><code>docker images</code></pre>
+    <h2>Ejecutar la imagen</h2>
+    <p>
+        Para iniciar un contenedor usando la imagen descargada, ejecuta:
+    </p>
+    <pre><code>docker run -it osheny/dockerizandolaquimica2:latest</code></pre>
+    <div style="background: #eafaf1; border-left: 5px solid #27ae60; padding: 1rem 1.5rem; margin-top: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(39,174,96,0.08);">
+        <p style="margin: 0; font-size: 1.15rem; color: #218c5c;">
+            <strong>¡Listo!</strong> Ahora tienes un entorno con todos los programas que necesitas para la simulación química.
+        </p>
+    </div>
+</body>
+</html>
